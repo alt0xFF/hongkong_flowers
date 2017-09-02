@@ -3,21 +3,189 @@
 ## 1) Data Collection Stage:
 
 ### scrape data from python
+```
+# download to load folder
 $ python ./scrape.py -n 100 -f list.csv -p /mnt/scratch/flowers/images/
+# or upload to s3
+$ python ./scrape.py -n 100 -f list.csv -s
+```
 
 takes a file that looks like this:
 
 $ csvlook list.csv
 
-|    編號 | 更多資料 | 學名                                          | 中文名         | 中文別名        | 英文名                         | 英文別名                   | 科                | 習性     | search_term                                |
-| ----- | ---- | ------------------------------------------- | ----------- | ----------- | --------------------------- | ---------------------- | ---------------- | ------ | ------------------------------------------ |
-|    14 | 進入   | Alangium chinense                           | 八角楓         | 水芒樹         | Chinese-Alangium            | NoInfo                 | ALANGIACEAE八角楓科  | 喬木_灌木  | Alangium chinense                          |
-|    83 | 進入   | Cerbera manghas                             | 海芒果         | 海果          | Cerbera-Sea-Mango           | NoInfo                 | APOCYNACEAE夾竹桃科  | 喬木     | Cerbera manghas                            |
-|   334 | 進入   | Rhus chinensis                              | 鹽膚木         | 沒資料         | Sumac                       | NoInfo                 | ANACARDIACEAE漆樹科 | 喬木     | Rhus chinensis                             |
-|   335 | 進入   | Rhus hypoleuca                              | 白背鹽膚木       | 白背漆         | Sumac                       | NoInfo                 | ANACARDIACEAE漆樹科 | 喬木     | Rhus hypoleuca                             |
-|   473 | 進入   | Ilex rotunda                                | 鐵冬青         | 沒資料         | Chinese Holly               | Panaceae Holly         | AQUIFOLIACEAE冬青科 | 喬木     | Ilex rotunda                               |
-|   516 | 進入   | Plumeria rubra var. sp.(TBC)                | 雞蛋花(黃色)     | 沒資料         | NoInfo                      | NoInfo                 | APOCYNACEAE夾竹桃科  | 落葉小喬木  | Plumeria rubra var sp                      |
-|   701 | 進入   | Odontonema strictum                         | 紅樓花         | 沒資料         | NoInfo                      | NoInfo                 | ACANTHACEAE爵床科   | 灌木     | Odontonema strictum                        |
-|   701 | 進入   | Odontonema strictum                         | 紅樓花         | 沒資料         | NoInfo                      | NoInfo                 | ACANTHACEAE爵床科   | 灌木     | Odontonema strictum                        |
-|   703 | 進入   | Thunbergia erecta                           | 硬枝老鴉嘴       | 沒資料         | Bush Thunbergia             | NoInfo                 | ACANTHACEAE爵床科   | 灌木     | Thunbergia erecta                          |
-
+| search_term |
+| ----- |
+| 一枝黃花  |
+| 三加皮 |
+| 千里光 |
+| 大水萍 |
+| 大花紫玉盤 |
+| 小金櫻 |
+| 山指甲 |
+| 山麥冬 |
+| 山椒  |
+| 山棯  |
+| 山蒼樹 |
+| 山銀花 |
+| 五爪金龍  |
+| 五色梅 |
+| 五節芒 |
+| 天門冬 |
+| 天香爐 |
+| 少花龍葵  |
+| 文頭郎 |
+| 木薑子 |
+| 毛冬青 |
+| 水茄  |
+| 水浮蓮 |
+| 水葫蘆 |
+| 水橫枝 |
+| 火炭母 |
+| 牛茄子 |
+| 仙人掌 |
+| 仙鶴草 |
+| 半邊蓮 |
+| 布渣葉 |
+| 玉葉金花  |
+| 白花丹 |
+| 白花油麻藤 |
+| 白花草 |
+| 白花燈籠  |
+| 白背蔓荊  |
+| 白茅根 |
+| 白鶴靈芝  |
+| 白簕  |
+| 白簕花 |
+| 石班木 |
+| 吊裙草 |
+| 地黃蓮 |
+| 地膽草 |
+| 如意草 |
+| 羊蹄甲藤  |
+| 老鼠刺 |
+| 耳挖草 |
+| 亨氏薔薇  |
+| 含羞草 |
+| 扭序草 |
+| 牡荊  |
+| 芒 |
+| 豆豉薑 |
+| 車前草 |
+| 車輪梅 |
+| 怕醜草 |
+| 油甘子 |
+| 金錦香 |
+| 金櫻子 |
+| 青葙  |
+| 勃氏黧豆  |
+| 南方菟絲子 |
+| 春花  |
+| 炮杖花 |
+| 紅毛草 |
+| 紅花酢漿草 |
+| 美娘子 |
+| 胡蔓藤 |
+| 茅根  |
+| 茅莓  |
+| 苦苣菜 |
+| 苦郎樹 |
+| 苦楮  |
+| 苦藚菜 |
+| 重瓣臭茉莉 |
+| 革命菜 |
+| 桐花樹 |
+| 桃金娘 |
+| 海芋  |
+| 破布葉 |
+| 粉葉羊蹄甲 |
+| 臭牡丹 |
+| 臭花草 |
+| 臭茉莉 |
+| 草海桐 |
+| 草楊莓子  |
+| 酒餅葉 |
+| 馬利筋 |
+| 馬纓丹 |
+| 鬼燈籠 |
+| 假老虎簕  |
+| 假茉莉 |
+| 假鷹爪 |
+| 剪刀股 |
+| 崗松  |
+| 崗梅  |
+| 崗棯  |
+| 望江南 |
+| 梁子菜 |
+| 梅葉冬青  |
+| 梔子  |
+| 淡紫百合  |
+| 牽牛  |
+| 細軸蕘花  |
+| 蛇莓  |
+| 軟條七薔薇 |
+| 連生桂子花 |
+| 野白紙扇  |
+| 野百合 |
+| 野牡丹 |
+| 野芋頭 |
+| 野扁豆 |
+| 野雞冠 |
+| 魚眼草 |
+| 魚腸草 |
+| 麥門冬 |
+| 傘序臭黃荊 |
+| 單葉蔓荊  |
+| 紫玉盤 |
+| 絲茅  |
+| 華南忍冬  |
+| 華南雲實  |
+| 菟絲子 |
+| 量天尺 |
+| 黃花草 |
+| 黃花棉 |
+| 黃荊  |
+| 黃葵  |
+| 黃鵪菜 |
+| 黑面神 |
+| 酢漿草 |
+| 楠藤  |
+| 腫柄菊 |
+| 落地生根  |
+| 補血草 |
+| 鼠刺  |
+| 鼠麴草 |
+| 裸花紫珠  |
+| 鈎吻  |
+| 酸藤子 |
+| 鳳眼藍 |
+| 豨薟  |
+| 蔓荊子 |
+| 豬屎豆 |
+| 餘甘子 |
+| 磨盤草 |
+| 錢貫草 |
+| 錫葉藤 |
+| 龍葵  |
+| 赬桐  |
+| 繁縷  |
+| 薜荔  |
+| 薑花  |
+| 薇甘菊 |
+| 薊 |
+| 賽葵  |
+| 闊苞菊 |
+| 韓信草 |
+| 點秤星 |
+| 斷腸草 |
+| 雞矢藤 |
+| 雞屎藤 |
+| 蟛蜞菊 |
+| 蘆葦  |
+| 鹹蝦花 |
+| 藿香薊 |
+| 蠟燭果 |
+| 霸王花 |
+| 欒茜  |
+| 癲茄  |
+| 靈枝草 |
