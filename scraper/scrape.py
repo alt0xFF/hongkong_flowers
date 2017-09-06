@@ -11,6 +11,7 @@ import json
 import logging
 import boto
 import boto.s3
+from PIL import Image
 from boto.s3.key import Key
 import StringIO
 from bs4 import BeautifulSoup
@@ -67,7 +68,7 @@ def get_soup(url, headers):
 def get_image(path, query, max_images, legal_term='n', upload_to_s3=False):
   qry = query.split()
   qry = "+".join(qry)
-  url = "https://www.google.com.hk/search?q=" + qry + "+花&source=lnms&tbm=isch&num=100"
+  url = "https://www.google.com.hk/search?q=" + qry + "&source=lnms&tbm=isch&num=100"
   url += '&tbs=' + JPGONLY + ',' + PHOTO + ',' + COLOR #augment with filters that give us only color photos in jpeg format
   if legal_term != 'n':
     #url += '&tbs=sur:' + legal_term
@@ -75,7 +76,7 @@ def get_image(path, query, max_images, legal_term='n', upload_to_s3=False):
 
   logging.info('attempting query for search term: ['+ query + '] url = ' + url)
   headers = {'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:55.0) Gecko/20100101 Firefox/55.0"}
-  soup = get_soup(url, header)
+  soup = get_soup(url, headers)
   ActualImages = []
   for a in soup.find_all("div", {"class":"rg_meta"}):
     #link, Type = json.loads(a.text)["ou"], json.loads(a.text)["ity"]
@@ -103,6 +104,11 @@ def get_image(path, query, max_images, legal_term='n', upload_to_s3=False):
         f = open(img_path, 'wb')
         f.write(raw_img.read())
         f.close()
+
+        # resize
+        im = Image.open(img_path)
+        im.thumbnail((640, 640), Image.ANTIALIAS)
+        im.save(img_path, "JPEG")
 
       i += 1
       if i > max_images:
