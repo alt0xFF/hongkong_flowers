@@ -61,8 +61,8 @@ def setLevel(level):
   logger = logging.getLogger()
   logger.setLevel(level)
 
-def get_soup(url, header):
-  return BeautifulSoup(urlopen(Request(url, headers=header)), 'html.parser')
+def get_soup(url, headers):
+  return BeautifulSoup(urlopen(Request(url, headers=headers)), 'html.parser')
 
 def get_image(path, query, max_images, legal_term='n', upload_to_s3=False):
   qry = query.split()
@@ -74,8 +74,7 @@ def get_image(path, query, max_images, legal_term='n', upload_to_s3=False):
     url += ',sur:' + legal_term
 
   logging.info('attempting query for search term: ['+ query + '] url = ' + url)
-  header = {'User-Agent': "Mozilla/5.0 (Windows NT 6.1; WOW64) "
-                          "'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/537.36"}
+  headers = {'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:55.0) Gecko/20100101 Firefox/55.0"}
   soup = get_soup(url, header)
   ActualImages = []
   for a in soup.find_all("div", {"class":"rg_meta"}):
@@ -88,7 +87,7 @@ def get_image(path, query, max_images, legal_term='n', upload_to_s3=False):
   #for (img, Type) in ActualImages:
   for img in ActualImages:
     try:
-      req = Request(url=img, headers={'User-Agent': header})
+      req = Request(url=img, headers=headers)
       raw_img = urlopen(req)
       filename = "img" + "_" + str(i) + ".jpg"
 
