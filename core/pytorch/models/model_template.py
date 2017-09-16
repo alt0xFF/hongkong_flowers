@@ -9,13 +9,24 @@ class model_template(nn.Module):
         self.conv = nn.Sequential(
             nn.Conv2d(3, 64, 3),
             nn.ReLU(),
+            nn.MaxPool2d((4, 4)),
+            nn.Conv2d(64, 128, 3),
+            nn.ReLU(),
+            nn.MaxPool2d((4, 4)),
+            nn.Conv2d(128, 256, 3),
+            nn.ReLU(),
+            nn.MaxPool2d((4, 4)),
+            nn.Conv2d(256, 512, 3),
+            nn.ReLU(),
             nn.MaxPool2d((2, 2)),
         )
-
-
+        
+        self.dense = nn.Sequential(
+            nn.Linear(512, num_classes),
+        )
         
     def forward(self, x):
-        print(x.size())
-        y = self.dense(x)
-        print(y.size())
-        return y
+        y = self.conv(x)
+        y = torch.squeeze(y)
+        z = self.dense(y)
+        return z

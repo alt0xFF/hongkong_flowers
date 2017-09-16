@@ -10,19 +10,12 @@ class FlowerDataset(Dataset):
         self.data_dir = data_dir
         self.trainValidTest = trainValidTest
         
+        # get folder names in data_dir, note that this is in int not str!
+        self.classes = [int(i) for i in os.listdir(self.data_dir) if os.path.isdir(self.data_dir + i)]
+                
         # count folders in data_dir
-        self.num_classes = sum(os.path.isdir(i) for i in os.listdir(data_dir))
-
-        # read csv file, create codename_list. Remember it is a list of strings!
-        with open(data_dir + 'flower_list.csv', 'rb') as csvfile:
-            data = csv.reader(csvfile)
-            
-            # get the list of corresponding codename list
-            codename_list = [row[0] for row in data]
-            
-            # ignore the first element which is the title
-            self.codename_list = codename_list[1:]
-                        
+        self.num_classes = len(self.classes)
+ 
         # get the list of all jpg filenames in data_dir    
         image_filenames = glob.glob(data_dir + '/**/*.jpg')
                 
@@ -35,6 +28,7 @@ class FlowerDataset(Dataset):
             # create train list: all jpg filenames which is less than 17.
             self.data_list = [name for name in image_filenames 
                               if int(os.path.basename(name).split('.')[0]) <= 17]
+            self.data_list.remove(self.data_dir + '3112/06.jpg')
             
         elif self.trainValidTest=='valid':
             # create valid list: all jpg filenames which is equal to 18.
@@ -49,8 +43,6 @@ class FlowerDataset(Dataset):
         
         self.num_samples = len(self.data_list)
         print('Total number of %s samples: %i' % (self.trainValidTest, self.num_samples))
-
-        #assert(len(self.train_list) + len(self.valid_list) + len(self.test_list) == self.num_samples)
         
         self.transform = transform
         
@@ -59,16 +51,19 @@ class FlowerDataset(Dataset):
         return self.num_samples
     
     def __getitem__(self, idx):
+        
         # load image
         image_name = self.data_list[idx]
         image = Image.open(image_name)
-        
+
         # load label
         class_label = image_name.split('/')[-2]
-        label = self.codename_list.index(class_label)
-                
+        label = self.classes.index(int(class_label))
+            
         if self.transform:
             image = self.transform(image)
+
+        assert(image.size() == (3, 300, 300))
 
         sample = {'image': image, 'label': label}
 
