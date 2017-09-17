@@ -16,7 +16,7 @@ CONFIGS = [
 #      model name,   optimizer,            loss              metric
 [ "model_template",     "adam",        "CE_loss",    "simple_metric"],  # 0
 [ "model_template",      "sgd",        "CE_loss",    "simple_metric"],  # 1
-[ "model_template",      "sgd",   "softmax_loss",    "simple_metric"],  # 1    
+[ "model_template",      "sgd",       "NLL_loss",    "simple_metric"],  # 2    
 ]
 TRANSFORMS = [
     'to_tensor_only', #0
