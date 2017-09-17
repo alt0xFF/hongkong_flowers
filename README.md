@@ -19,3 +19,26 @@ To add your model, simply do the following:
 2. add your model class to `ModelsDict` in `core/YOURLIBRARYCHOICE/parser.py`
 3. add your model, optimizer and loss function of your choice to `CONFIGS` in `options.py`
 4. change `self.configs` to your model in `options.py`
+
+## Splitting Dataset
+Currently I am trying to split the dataset into 80:10:10 ratio, but some classes have more than 20 jpgs.
+
+0 - 17.jpg       -> train
+
+18.jpg           -> valid
+
+19.jpg or above  -> test
+
+## TODO
+### pyTorch:
+- [ ] Visdom.
+- [ ] logger for saving results.
+- [ ] model.test()
+
+### Keras:
+- [ ] Model.
+- [ ] dataloading.
+- [ ] model.train()
+- [ ] model.validate()
+- [ ] model.test()
+- [ ] tensorboard.
