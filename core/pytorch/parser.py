@@ -3,8 +3,9 @@ from core.pytorch.models.model_template import model_template
 ModelsDict     = {"model_template": model_template,        # contains only a dense layer
                  }
 # losses
-from torch.nn import CrossEntropyLoss
+from torch.nn import CrossEntropyLoss, NLLLoss
 LossesDict     = {"CE_loss": CrossEntropyLoss,
+                  "NLL_loss":NLLloss,
                  }
 # optims
 from torch.optim import Adam, SGD
