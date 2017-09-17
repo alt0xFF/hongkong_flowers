@@ -63,7 +63,7 @@ class FlowerDataset(Dataset):
         if self.transform:
             image = self.transform(image)
 
-        assert(image.size() == (3, 300, 300))
+        assert image.size() == (3, 300, 300)
 
         sample = {'image': image, 'label': label}
 

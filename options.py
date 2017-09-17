@@ -12,15 +12,14 @@ import torch.optim as optim
 LIBRARIES = ['pytorch', # 0
              'keras']   # 1
 
-MODELS = ['model_template', # 0
-         ]            # 1
-
 CONFIGS = [
-#      model name,   optimizer,         loss 
-[ "model_template",     "adam",     "CE_loss"],  # 0
-[ "model_template",      "sgd",     "CE_loss"],  # 1    
+#      model name,   optimizer,            loss              metric
+[ "model_template",     "adam",        "CE_loss",    "simple_metric"],  # 0
+[ "model_template",      "sgd",        "CE_loss",    "simple_metric"],  # 1
+[ "model_template",      "sgd",   "softmax_loss",    "simple_metric"],  # 1    
 ]
-TRANSFORMS = ['to_tensor_only', #0
+TRANSFORMS = [
+    'to_tensor_only', #0
              ]
 
 class Options(object):   # NOTE: shared across all modules
@@ -51,13 +50,13 @@ class Options(object):   # NOTE: shared across all modules
         # USE YOUR OWN DATA DIR: NEED ABSOLUTE PATH!
         self.data_dir         = '/workspace/hongkong_flowers/dataset/'
         self.mode             = None         # no need to set here: 0(train) | 1(test)
+        self.library   = LIBRARIES[self.library]
+        self.configs   = CONFIGS[self.configs]
+        self.transform = TRANSFORMS[self.transform]        
 
 #----------------------------------------------------------------------------------------#
 # advance settings
 
-        self.library   = LIBRARIES[self.library]
-        self.configs   = CONFIGS[self.configs]
-        self.transform = TRANSFORMS[self.transform]
         # pytorch settings
         if self.library == "pytorch":
             self.use_cuda           = torch.cuda.is_available()

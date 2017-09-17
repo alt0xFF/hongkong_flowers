@@ -10,9 +10,9 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 from torch.utils.data import DataLoader
 
-from .dataset import FlowerDataset
-from .parser import ModelsDict, OptimsDict, LossesDict, TransformsDict
-from .utils import AverageMeter
+from core.pytorch.dataset import FlowerDataset
+from core.pytorch.parser import ModelsDict, OptimsDict, LossesDict, MetricsDict, TransformsDict
+from core.pytorch.utils import AverageMeter
 
 class Model(object):
     def __init__(self, args):
@@ -41,12 +41,15 @@ class Model(object):
                                               shuffle=False)
                 
         # setup model
-        model_choice, opt_choice, loss_choice = args.configs
+        model_choice, opt_choice, loss_choice, metric_choice = args.configs
         
         # remember these are classes
         FlowerModel = ModelsDict[model_choice]
         Optim = OptimsDict[opt_choice]
         Loss = LossesDict[loss_choice]
+        
+        # but metric is a function!
+        self.metric = MetricsDict[metric_choice]
         
         # get number of classes from dataset
         num_classes = self.train_dataset.num_classes
@@ -63,7 +66,7 @@ class Model(object):
         
         self.criterion = Loss()   
         self.optimizer = Optim(self.model.parameters(), lr=args.lr)
-    
+
     def train(self, train_dataloader, model, criterion, optimizer, epoch, args): 
     
         # switch to train mode
@@ -124,7 +127,7 @@ class Model(object):
             # end time        
             end = time.time()
 
-        print("\n\n Epoch %i: Train Loss = %.4f, Total Time = %.4fs" % (epoch, losses.avg, time.time() - start_time))
+        print("\n\nEpoch %i: Train Loss = %.4f, Total Time = %.4fs" % (epoch, losses.avg, time.time() - start_time))
     
     
     def validate(self, val_dataloader, model, criterion, epoch, args):
@@ -150,7 +153,7 @@ class Model(object):
             outputs = model(inputs)
 
             # calculate accuracy
-            accuracy = accuracy_metric(outputs, labels)
+            accuracy = self.metric(outputs, labels)
 
             # calculate softmax loss
             loss = criterion(outputs, labels) 
@@ -173,7 +176,7 @@ class Model(object):
             self.train(self.train_dataloader, self.model, self.criterion, self.optimizer, epoch, args)
 
             # evaluate on validation set after 1 epoch
-            #self.validate(self.valid_dataloader, self.model, self.criterion, epoch, args)
+            self.validate(self.valid_dataloader, self.model, self.criterion, epoch, args)
     
     # TODO: test function    
     def test(self, args):

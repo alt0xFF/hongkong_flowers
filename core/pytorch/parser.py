@@ -12,6 +12,10 @@ OptimsDict     = {"adam": Adam,
                   "sgd": SGD,
                  }
 
+from core.pytorch.metric import simple_metric
+MetricsDict    = {"simple_metric":simple_metric,
+                 }
+
 from torchvision import transforms
 TransformsDict = {"to_tensor_only": transforms.ToTensor(),
                  }
