@@ -38,7 +38,6 @@ class Model(object):
             self.train_step = self.train_generator.samples // args.batch_size            
             self.valid_step = self.valid_generator.samples // args.batch_size
 
-            
         # datasets and dataloader for test mode            
         if args.mode == 1:
             self.test_generator = transform.flow_from_directory(self.test_dir,
@@ -48,7 +47,6 @@ class Model(object):
             
             self.test_step = self.test_generator.samples // args.batch_size
             
-                
         # setup model
         model_choice, opt_choice, loss_choice, metric_choice = args.configs
         
@@ -56,10 +54,10 @@ class Model(object):
         Optim = OptimsDict[opt_choice]
         Loss = LossesDict[loss_choice]
         
-        # for keras, we use function for flowermodel!
+        # for keras, we use functional flowermodel!
         FlowerModel = ModelsDict[model_choice]
         
-        # but metric is a function!
+        # metric is also a function!
         self.metric = MetricsDict[metric_choice]
         
         # Input
@@ -75,7 +73,7 @@ class Model(object):
         self.optimizer = Optim(lr=args.lr)
         
         # compile model
-        self.model.compile(loss=self.criterion, optimizer=self.optimizer)
+        self.model.compile(loss=self.criterion, optimizer=self.optimizer, metrics=[self.metric])
 
     def fit(self, args):
         # fit the model
