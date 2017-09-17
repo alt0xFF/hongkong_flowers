@@ -18,6 +18,14 @@ class Model(object):
     def __init__(self, args):
         super(Model, self).__init__()
         
+        # this is for removing torch dependency in options.py
+        if args.use_cuda: 
+            args.use_cuda = torch.cuda.is_available()
+        
+        # set up visdom
+        if args.visualize:
+            self.vis = visdom.Visdom()
+            
         # parsed transform function for dataset
         transform = TransformsDict[args.transform]
         
