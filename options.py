@@ -50,6 +50,7 @@ class Options(object):   # NOTE: shared across all modules
         # USE YOUR OWN DATA DIR: NEED ABSOLUTE PATH!
         self.data_dir         = '/workspace/hongkong_flowers/dataset/'
         self.mode             = None         # no need to set here: 0(train) | 1(test)
+        
         self.library   = LIBRARIES[self.library]
         self.configs   = CONFIGS[self.configs]
         self.transform = TRANSFORMS[self.transform]        
