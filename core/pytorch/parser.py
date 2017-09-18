@@ -5,7 +5,7 @@ ModelsDict     = {"model_template": model_template,        # contains only a den
 # losses
 from torch.nn import CrossEntropyLoss, NLLLoss
 LossesDict     = {"CE_loss": CrossEntropyLoss,
-                  "NLL_loss":NLLloss,
+                  "NLL_loss":NLLLoss,
                  }
 # optims
 from torch.optim import Adam, SGD

@@ -17,7 +17,7 @@ def train():
         model = Model(options)
     
     # fit model
-    model.fit(options)
+    model.fit()
         
 if __name__=='__main__':
     train()

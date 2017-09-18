@@ -75,7 +75,7 @@ class Model(object):
         # compile model
         self.model.compile(loss=self.criterion, optimizer=self.optimizer, metrics=[self.metric])
 
-    def fit(self, args):
+    def fit(self):
         # fit the model
         self.model.fit_generator(generator=self.train_generator, 
                                  steps_per_epoch=self.train_step,

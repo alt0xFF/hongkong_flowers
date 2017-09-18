@@ -32,7 +32,7 @@ class Options(object):   # NOTE: shared across all modules
         self.configs          = 0            # choose from CONFIGS
         self.transform        = 0            # choose from TRANSFORMS
         self.num_epochs       = 1000
-        self.lr               = 0.0001
+        self.lr               = 0.001
         self.batch_size       = 32
         self.valid_batch_size = 32
         self.test_batch_size  = 32
@@ -44,6 +44,7 @@ class Options(object):   # NOTE: shared across all modules
         
         # USE YOUR OWN DATA DIR: NEED ABSOLUTE PATH!
         self.data_dir         = '/notebooks/data/hongkong_flowers/dataset/sorted/'
+        #self.data_dir         = '/workspace/hongkong_flowers/dataset/sorted/'
         self.mode             = None         # no need to set here: 0(train) | 1(test)
         
         # for the image size
