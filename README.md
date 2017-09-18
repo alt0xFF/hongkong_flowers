@@ -36,9 +36,9 @@ Currently I am trying to split the dataset into 80:10:10 ratio, but some classes
 - [ ] model.test()
 
 ### Keras:
-- [ ] Model.
-- [ ] dataloading.
-- [ ] model.train()
-- [ ] model.validate()
+- [x] Model.
+- [x] dataloading.
+- [x] model.train()
+- [x] model.validate()
 - [ ] model.test()
 - [ ] tensorboard.
