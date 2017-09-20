@@ -27,7 +27,7 @@ class Options(object):   # NOTE: shared across all modules
         self.timestamp   = "17091700"   # "yymmdd##"
         self.gpu         = 0
         # training configuration
-        self.library          = 0            # choose from LIBRARIES
+        self.library          = 1            # choose from LIBRARIES
         self.configs          = 0            # choose from CONFIGS
         self.transform        = 0            # choose from TRANSFORMS
         self.num_epochs       = 1000
