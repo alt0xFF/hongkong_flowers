@@ -15,9 +15,9 @@ It is very easy to set up a docker container for pyTorch and Keras using the fol
 ### pyTorch:
 `sudo docker pull floydhub/pytorch:0.2.0-gpu-py2.11` 
 
-(Note: remove `-gpu` if you want CPU only. Change to `py3.11` if using python3.
+(Note: remove `-gpu` if you want CPU only. Change to `py3.11` if using python3.)
 
-`sudo nvidia-docker run -ti -v 'yourdrive':/workspace/ -p 8889:8888 -p 8097:8097 floydhub/pytorch:0.2.0-gpu-py2.11` 
+`sudo nvidia-docker run -ti -v YOURDIRECTORY:/workspace/ -p 8889:8888 -p 8097:8097 floydhub/pytorch:0.2.0-gpu-py2.11` 
 
 For CPU use normal docker. You can also add `/bin/bash` at the end of the command to use bash instead.
 
@@ -26,7 +26,7 @@ Go to your `localhost:8889` to access pyTorch Jupyter notebook!
 ### Keras
 `sudo docker pull floydhub/tensorflow:1.3.0-gpu-py2_aws.12` (settings likewise as above.)
 
-`sudo nvidia-docker run -ti -v 'yourdrive':/workspace/ -p 8888:8888 -p 6006:6006 floydhub/tensorflow:1.3.0-gpu-py2_aws.12` 
+`sudo nvidia-docker run -ti -v YOURDIRECTORY:/workspace/ -p 8888:8888 -p 6006:6006 floydhub/tensorflow:1.3.0-gpu-py2_aws.12` 
 
 Go to your `localhost:8888` to access Keras and Tensorflow Jupyter notebook!
 
