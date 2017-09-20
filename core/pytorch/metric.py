@@ -6,5 +6,5 @@ def simple_metric(outputs, labels):
     total = len(labels)
     correct = (predicted == labels).sum().float()
     accuracy = correct / total
-    
+
     return accuracy.data.cpu().numpy()

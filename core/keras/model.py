@@ -1,3 +1,7 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 import os
 import tensorflow as tf
 from keras import backend as K
@@ -101,5 +105,3 @@ class FlowerClassificationModel(object):
 
     def predict(self, x):
         self.model.predict(x)
-
-
