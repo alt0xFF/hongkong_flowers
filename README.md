@@ -6,6 +6,30 @@ An APP for identify flowers in Hong Kong with Deep Learning technology.
 
 ![screen.jpg](/images/screen.jpg)
 
+## Prerequisite
+Keras or pyTorch installed.
+
+## Docker
+It is very easy to set up a docker container for pyTorch and Keras using the following command.
+
+### pyTorch:
+`sudo docker pull floydhub/pytorch:0.2.0-gpu-py2.11` 
+
+(Note: remove `-gpu` if you want CPU only. Change to `py3.11` if using python3.)
+
+`sudo nvidia-docker run -ti -v YOURDIRECTORY:/workspace/ -p 8889:8888 -p 8097:8097 floydhub/pytorch:0.2.0-gpu-py2.11` 
+
+For CPU use normal docker. You can also add `/bin/bash` at the end of the command to use bash instead.
+
+Go to your `localhost:8889` to access pyTorch Jupyter notebook!
+
+### Keras
+`sudo docker pull floydhub/tensorflow:1.3.0-gpu-py2_aws.12` (settings likewise as above.)
+
+`sudo nvidia-docker run -ti -v YOURDIRECTORY:/workspace/ -p 8888:8888 -p 6006:6006 floydhub/tensorflow:1.3.0-gpu-py2_aws.12` 
+
+Go to your `localhost:8888` to access Keras and Tensorflow Jupyter notebook!
+
 ## Training
 Go to `options.py` and change data_dir to your own dataset *ABSOLUTE* path.
 
@@ -19,15 +43,6 @@ To add your model, simply do the following:
 2. add your model class to `ModelsDict` in `core/YOURLIBRARYCHOICE/parser.py`
 3. add your model, optimizer and loss function of your choice to `CONFIGS` in `options.py`
 4. change `self.configs` to your model in `options.py`
-
-## Splitting Dataset
-Currently I am trying to split the dataset into 80:10:10 ratio, but some classes have more than 20 jpgs.
-
-0 - 17.jpg       -> train
-
-18.jpg           -> valid
-
-19.jpg or above  -> test
 
 ## TODO
 ### pyTorch:
