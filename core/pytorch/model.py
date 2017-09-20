@@ -11,9 +11,9 @@ from torchvision.datasets import ImageFolder
 from core.pytorch.parser import ModelsDict, OptimsDict, LossesDict, MetricsDict, TransformsDict
 from core.pytorch.utils import AverageMeter
 
-class Model(object):
+class FlowerClassificationModel(object):
     def __init__(self, args):
-        super(Model, self).__init__()
+        super(self.__class__, self).__init__()
 
         # params
         self.train_dir = args.data_dir + 'train/'

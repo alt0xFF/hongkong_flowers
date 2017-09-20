@@ -5,7 +5,7 @@ from keras import backend as K
 from core.keras.parser import ModelsDict, OptimsDict, LossesDict, MetricsDict, TransformsDict
 
 
-class FlowerModel(object):
+class FlowerClassificationModel(object):
     def __init__(self, args):
         super(self.__class__, self).__init__()
 
