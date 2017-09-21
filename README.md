@@ -64,3 +64,6 @@ To add your model, simply do the following:
 - [x] model.validate()
 - [ ] model.test()
 - [ ] tensorboard.
+
+### Citations:
+[Fine-tuning Deep Convolutional Networks for Plant Recognition](http://ceur-ws.org/Vol-1391/121-CR.pdf)
