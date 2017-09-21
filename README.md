@@ -6,10 +6,12 @@ An APP for identify flowers in Hong Kong with Deep Learning technology.
 
 ![screen.jpg](/images/screen.jpg)
 
-## Prerequisite
+Prerequisite
+============
 Keras or pyTorch installed.
 
-## Docker
+Docker
+======
 It is very easy to set up a docker container for pyTorch and Keras using the following command.
 
 ### pyTorch:
@@ -30,21 +32,24 @@ Go to your `localhost:8889` to access pyTorch Jupyter notebook!
 
 Go to your `localhost:8888` to access Keras and Tensorflow Jupyter notebook!
 
-## Fine-tuning
+Fine-tuning
+===========
 Fine-tuning the pre-trained ResNet50 with Oxford 102 flowers dataset
 
 `./finetuning/boostrap.sh` to download oxford102 dataset
 
 `python resnet50.py` to start fine-tuning
 
-## Training
+Training
+========
 Go to `options.py` and change data_dir to your own dataset *ABSOLUTE* path.
 
 Choose which library, model, optimizer and loss to run in `options.py` by changing `self.configs`.
 
 `python train.py` to start training.
 
-## Adding your own model
+Adding your own model
+=====================
 To add your model, simply do the following:
 1. create your model class in `core/YOURLIBRARYCHOICE/models`, note that it must take two arguments `(args, num_classes)`.
 2. add your model class to `ModelsDict` in `core/YOURLIBRARYCHOICE/parser.py`
@@ -65,5 +70,6 @@ To add your model, simply do the following:
 - [ ] model.test()
 - [ ] tensorboard.
 
-### Citations:
+Citations:
+==========
 [Fine-tuning Deep Convolutional Networks for Plant Recognition](http://ceur-ws.org/Vol-1391/121-CR.pdf)
