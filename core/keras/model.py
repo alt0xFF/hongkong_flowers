@@ -6,7 +6,9 @@ import os
 import tensorflow as tf
 from keras import backend as K
 
+# custom modules
 from core.keras.parser import ModelsDict, OptimsDict, LossesDict, MetricsDict, TransformsDict
+from core.keras.callbacks import get_callbacks
 
 
 class FlowerClassificationModel(object):
@@ -14,6 +16,7 @@ class FlowerClassificationModel(object):
         super(self.__class__, self).__init__()
 
         # params
+        self.args = args
         self.train_dir = args.data_dir + 'train/'
         self.valid_dir = args.data_dir + 'valid/'
         self.test_dir = args.data_dir + 'test/'
@@ -23,11 +26,21 @@ class FlowerClassificationModel(object):
         self.width = args.width
         self.height = args.height
 
+        # suppress info and warning
+        os.environ['TF_CPP_MIN_LOG_LEVEL'] = str(args.verbose)
+
+        # set which gpu to use
+        if args.gpu is not None:
+            os.environ["CUDA_VISIBLE_DEVICES"] = "%i" % (3 - args.gpu)
+
         # this setting allocates memory dynamically
         tfconfig = tf.ConfigProto(allow_soft_placement=True)
         tfconfig.gpu_options.allow_growth = True
         sess = tf.Session(config=tfconfig)
         K.set_session(sess)
+        
+        # set training phase
+        K.set_learning_phase(bool(1))
 
         # setup model
         model_choice, opt_choice, loss_choice, metric_choice = args.configs
@@ -54,16 +67,27 @@ class FlowerClassificationModel(object):
         # initialize model
         self.model = FlowerModel(args, self.num_classes)
 
+        # load previous model if toggled on
+        if args.load:
+            if os.path.isfile(args.load_dir):
+                self.model.load_weights(args.load_dir, by_name=True)
+                print("Successfully loaded weights from %s" % args.load_dir)
+            else:
+                raise ValueError('Cannot find any model weights file in %s!' % args.load_dir)
+
         # set up loss function, this is useless here but for the sake of completeness I leave it here.
         self.criterion = Loss
 
         # set up optimizer
-        self.optimizer = Optim(lr=0.001)
+        self.optimizer = Optim(lr=args.lr)
 
         # compile model
         self.model.compile(loss=self.criterion, optimizer=self.optimizer, metrics=self.metric)
 
     def fit(self):
+
+        # set training phase
+        K.set_learning_phase(bool(1))
 
         # datasets and dataloader for training
         train_generator = self.transform.flow_from_directory(self.train_dir,
@@ -81,14 +105,21 @@ class FlowerClassificationModel(object):
         train_step = train_generator.samples // self.batch_size
         valid_step = valid_generator.samples // self.batch_size
 
+        # create callbacks, remember to add data_gen to callbacks
+        all_callbacks = get_callbacks(self.args)
+
         # fit the model
         self.model.fit_generator(generator=train_generator,
                                  steps_per_epoch=train_step,
                                  epochs=self.num_epochs,
+                                 callbacks=all_callbacks,
                                  validation_data=valid_generator,
                                  validation_steps=valid_step)
 
     def evaluate(self):
+
+        # set testing phase
+        K.set_learning_phase(bool(0))
 
         # datasets and dataloader for test mode
         test_generator = self.transform.flow_from_directory(self.test_dir,
@@ -104,4 +135,8 @@ class FlowerClassificationModel(object):
         print('Test set loss = %.4f' % loss)
 
     def predict(self, x):
-        self.model.predict(x)
+
+        # set testing phase
+        K.set_learning_phase(bool(0))
+
+        return self.model.predict(x)

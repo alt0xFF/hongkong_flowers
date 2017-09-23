@@ -1,41 +1,37 @@
-from keras import backend as K
 from keras.layers import *
-from keras import regularizers
 from keras.models import Model, Sequential
+from keras.applications import ResNet50
 
 # note that for keras these are functions!
 def resnet50_model(args, num_classes):
 
-    # Input
-    inputs = Input(name='the_input', shape=args.img_size, dtype='float32')
+    # build the ResNet50 network
+    model = ResNet50(weights='imagenet', include_top=False, input_shape=args.img_size)
+    print('Model loaded.')
 
-    # input shape = (batch_size, 300, 300, 3)
-    conv1 = Conv2D(64, (3, 3), activation='relu')(inputs)
-    print(conv1.shape)
-    maxpool1 = MaxPooling2D(pool_size=(4, 4))(conv1)
+    # set the first 80 layers (up to the last conv block)
+    # to non-trainable (weights will not be updated)
+    for layer in model.layers:
+        layer.trainable = True
 
-    conv2 = Conv2D(128, (3, 3), activation='relu')(maxpool1)
-    maxpool2 = MaxPooling2D(pool_size=(4, 4))(conv2)
-    print(conv2.shape)
+    for layer in model.layers[:80]:
+        layer.trainable = False
 
-    conv3 = Conv2D(256, (3, 3), activation='relu')(maxpool2)
-    maxpool3 = MaxPooling2D(pool_size=(4, 4))(conv3)
-    print(conv3.shape)
+    # build a classifier model to put on top of the convolutional model
+    y = model.output
+    y = Flatten()(y)
+    y = Dropout(args.dropout)(y)
 
-    conv4 = Conv2D(512, (3, 3), activation='relu')(maxpool3)
-    maxpool4 = MaxPooling2D(pool_size=(2, 2))(conv4)
-    print(conv4.shape)
+    # now the shape = (batch_size, 2048)
+    y = Dense(2048, activation='elu', name='new_fc1')(y)
+    y = Dropout(args.dropout)(y)
+    y = Dense(1024, activation='elu', name='new_fc2')(y)
+    y = Dropout(args.dropout)(y)
+    y = Dense(512, activation='elu', name='new_fc3')(y)
+    y = Dropout(args.dropout)(y)
 
-    # now the shape = (batch_size, 1, 1, 512), so need to squeeze twice.
-    features = Lambda(lambda x: K.squeeze(x, 1))(maxpool4)
-    features = Lambda(lambda x: K.squeeze(x, 1))(features)
-    print(features.shape)
+    predictions = Dense(num_classes, activation='softmax', name='new_predictions2')(y)
 
-    # now the shape = (batch_size, 512)
-    y_pred = Dense(num_classes, activation='softmax')(features)
-    print(y_pred.shape)
-
-    # now y_pred has the shape = (batch_size, num_classess)
-    model = Model(inputs=[inputs], outputs=[y_pred])
+    model = Model(model.input, predictions, name='resnet50')
 
     return model
