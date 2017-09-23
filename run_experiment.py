@@ -12,7 +12,7 @@ def train():
     # set options to your specific experiment
     options.experiment = "fine_tuned_oxford102_model"
     options.gpu = 2
-    options.lr = 1E-3
+    options.lr = 1E-2
     options.batch_size = 128
 
     # load the weight file
