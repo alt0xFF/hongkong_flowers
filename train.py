@@ -8,8 +8,8 @@ def train():
     options = Options()
 
     # set which gpu to use
-    if options.gpu is not None:
-        os.environ["CUDA_VISIBLE_DEVICES"] = "%i" % (3 - options.gpu)
+    # if options.gpu is not None:
+    #     os.environ["CUDA_VISIBLE_DEVICES"] = "%i" % (3 - options.gpu)
 
     # choose model from library
     if options.library == 'pytorch':
