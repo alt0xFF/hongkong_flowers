@@ -23,11 +23,11 @@ def resnet50_model(args, num_classes):
     y = Dropout(args.dropout)(y)
 
     # now the shape = (batch_size, 2048)
-    y = Dense(2048, activation='elu', name='new_fc1')(y)
+    y = Dense(1024, activation='elu', name='new_fc1')(y)
     y = Dropout(args.dropout)(y)
     y = Dense(1024, activation='elu', name='new_fc2')(y)
     y = Dropout(args.dropout)(y)
-    y = Dense(512, activation='elu', name='new_fc3')(y)
+    y = Dense(1024, activation='elu', name='new_fc3')(y)
     y = Dropout(args.dropout)(y)
 
     predictions = Dense(num_classes, activation='softmax', name='new_predictions2')(y)
