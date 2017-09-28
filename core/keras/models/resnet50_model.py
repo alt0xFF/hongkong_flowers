@@ -1,7 +1,7 @@
 from keras.layers import *
 from keras.models import Model, Sequential
 from keras.applications import ResNet50
-
+import os
 # note that for keras these are functions!
 def resnet50_model(args, num_classes):
 
@@ -33,5 +33,14 @@ def resnet50_model(args, num_classes):
     predictions = Dense(num_classes, activation='softmax', name='new_predictions2')(y)
 
     model = Model(model.input, predictions, name='resnet50')
+
+    # load pretrained model
+    assert os.path.isfile(args.pretrained_file)
+
+    try:
+        model.load_weights(args.pretrained_file, by_name=True)
+        print("Successfully loaded pretrained weights from %s" % args.pretrained_file)
+    except:
+        raise ValueError('Cannot find any model weights file in %s!' % args.pretrained_file)
 
     return model

@@ -1,7 +1,6 @@
-import os
-
 # custom modules
 from options import Options
+
 
 def train():
     # setting up, options contains all our params
@@ -10,28 +9,44 @@ def train():
                       transform=1)  # use transform for resnet50
 
     # set options to your specific experiment
-    options.experiment = "fine_tuned_oxford102_model"
+    options.experiment = "fine_tuned_oxford102_model_dropout"
+    options.dropout = 0.1
+    options.number = options.dropout
+
+    # settings
     options.gpu = 2
+    options.save_test_result = True
+
+    # early stopping
+    options.early_stopping = True
+    options.patience = 20
+
+    # general hyperparameters
     options.lr = 1E-2
     options.batch_size = 128
 
-    # load the weight file
-    options.load = True
-    options.load_dir = '/workspace/hongkong_flowers/pretrained_models/fine-tuned-resnet50-weights.h5'
+    # reduce lr on plateau
+    options.reduce_lr = 0.5
 
-    # choose model from library
-    if options.library == 'pytorch':
-        from core.pytorch.model import FlowerClassificationModel
-    elif options.library == 'keras':
-        from core.keras.model import FlowerClassificationModel
-    else:
-        raise ValueError('Library not supported.')
+    for i in range(0, 9):
 
-    # initialize model
-    model = FlowerClassificationModel(options)
+        # initialize model
+        model = options.FlowerClassificationModel(options)
 
-    # fit model
-    model.fit()
+        # fit model
+        model.fit()
+
+        # evaluate model
+        model.evaluate()
+
+        # reset model for next parameter
+        model.reset()
+
+        # change dropout from 0.1 to 0.9
+        options.dropout += 0.1
+
+        # change the log number saved to checkpoints
+        options.number = options.dropout
 
 
 if __name__=='__main__':

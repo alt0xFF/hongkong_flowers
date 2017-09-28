@@ -206,4 +206,12 @@ def get_callbacks(args):
 
         )
 
+    if args.reduce_lr:
+        all_callbacks.append(
+            ReduceLROnPlateau(monitor='val_loss',
+                              factor=args.reduce_lr,
+                              patience=args.lr_patience,
+                              min_lr=args.min_lr)
+        )
+
     return all_callbacks
