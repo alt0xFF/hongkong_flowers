@@ -103,7 +103,7 @@ class FlowerClassificationModel(object):
                                                              classes=self.classes,
                                                              class_mode='categorical')
 
-        train_step = train_generator.samples // self.args.valid_batch_size
+        train_step = train_generator.samples // self.args.batch_size
         valid_step = valid_generator.samples // self.args.valid_batch_size
 
         # create callbacks, remember to add data_gen to callbacks
