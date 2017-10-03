@@ -1,6 +1,7 @@
 *.pyc
 .DS_Store
 checkpoint
+checkpoints
 data
 log
 scrapper/images
@@ -8,3 +9,6 @@ data_process/dataset
 .ipynb_checkpoints
 trained
 Untitled.ipynb
+request.json
+dataset
+pretrained_models
