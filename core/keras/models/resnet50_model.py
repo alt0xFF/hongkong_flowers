@@ -3,10 +3,10 @@ from keras.models import Model, Sequential
 from keras.applications.resnet50 import ResNet50, preprocess_input
 import os
 # note that for keras these are functions!
-def resnet50_model(args, num_classes):
+def resnet50_model(args, num_classes, input_tensor=None):
 
     # build the ResNet50 network
-    model = ResNet50(weights='imagenet', include_top=False, input_shape=args.img_size)
+    model = ResNet50(weights='imagenet', include_top=False, input_shape=args.img_size, input_tensor=input_tensor)
     print('Model loaded.')
 
     # set the first 80 layers (up to the last conv block)

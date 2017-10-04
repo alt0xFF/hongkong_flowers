@@ -5,6 +5,7 @@ from __future__ import print_function
 import os, gc, time
 import tensorflow as tf
 from keras import backend as K
+from keras.preprocessing.image import ImageDataGenerator
 
 # custom modules
 from core.keras.parser import ModelsDict, OptimsDict, LossesDict, MetricsDict, TransformsDict
@@ -12,7 +13,7 @@ from core.keras.callbacks import get_callbacks
 
 
 class FlowerClassificationModel(object):
-    def __init__(self, args):
+    def __init__(self, args, input_tensor=None):
         super(self.__class__, self).__init__()
 
         start_time = time.time()
@@ -62,7 +63,7 @@ class FlowerClassificationModel(object):
         self.metric = MetricsDict[metric_choice]
 
         # initialize model
-        self.model = FlowerModel(args, self.num_classes)
+        self.model = FlowerModel(args, num_classes=self.num_classes, input_tensor=input_tensor)
 
         # load previous model weights if toggled on
         if args.load_file:
@@ -112,14 +113,15 @@ class FlowerClassificationModel(object):
                                  validation_steps=valid_step)
 
     def evaluate(self):
+        datagen = ImageDataGenerator
 
         # datasets and dataloader for test mode
-        test_generator = self.transform.flow_from_directory(self.test_dir,
-                                                            batch_size=self.args.test_batch_size,
-                                                            target_size=(self.height, self.width),
-                                                            classes=self.classes,
-                                                            class_mode='categorical',
-                                                            shuffle=False)
+        test_generator = datagen.flow_from_directory(self.test_dir,
+                                                     batch_size=self.args.test_batch_size,
+                                                     target_size=(self.height, self.width),
+                                                     classes=self.classes,
+                                                     class_mode='categorical',
+                                                     shuffle=False)
 
         test_step = test_generator.samples // self.args.test_batch_size
 
