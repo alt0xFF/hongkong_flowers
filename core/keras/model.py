@@ -5,6 +5,8 @@ from __future__ import print_function
 import os, gc, time
 import tensorflow as tf
 from keras import backend as K
+from keras.preprocessing.image import ImageDataGenerator
+from keras.applications.imagenet_utils import preprocess_input
 
 # custom modules
 from core.keras.parser import ModelsDict, OptimsDict, LossesDict, MetricsDict, TransformsDict
@@ -12,7 +14,7 @@ from core.keras.callbacks import get_callbacks
 
 
 class FlowerClassificationModel(object):
-    def __init__(self, args):
+    def __init__(self, args, input_tensor=None):
         super(self.__class__, self).__init__()
 
         start_time = time.time()
@@ -39,9 +41,6 @@ class FlowerClassificationModel(object):
         sess = tf.Session(config=tfconfig)
         K.set_session(sess)
 
-        # set training phase
-        K.set_learning_phase(bool(1))
-
         # setup model
         model_choice, opt_choice, loss_choice, metric_choice = args.configs
 
@@ -65,7 +64,7 @@ class FlowerClassificationModel(object):
         self.metric = MetricsDict[metric_choice]
 
         # initialize model
-        self.model = FlowerModel(args, self.num_classes)
+        self.model = FlowerModel(args, num_classes=self.num_classes, input_tensor=input_tensor)
 
         # load previous model weights if toggled on
         if args.load_file:
@@ -86,9 +85,6 @@ class FlowerClassificationModel(object):
 
         print ('Successfully loaded model. (%.4fs)' % (time.time() - start_time))
     def fit(self):
-
-        # set training phase
-        K.set_learning_phase(bool(1))
 
         # datasets and dataloader for training
         train_generator = self.transform.flow_from_directory(self.train_dir,
@@ -118,17 +114,15 @@ class FlowerClassificationModel(object):
                                  validation_steps=valid_step)
 
     def evaluate(self):
-
-        # set testing phase
-        K.set_learning_phase(bool(0))
+        datagen = ImageDataGenerator(preprocessing_function=preprocess_input)
 
         # datasets and dataloader for test mode
-        test_generator = self.transform.flow_from_directory(self.test_dir,
-                                                            batch_size=self.args.test_batch_size,
-                                                            target_size=(self.height, self.width),
-                                                            classes=self.classes,
-                                                            class_mode='categorical',
-                                                            shuffle=False)
+        test_generator = datagen.flow_from_directory(self.test_dir,
+                                                     batch_size=self.args.test_batch_size,
+                                                     target_size=(self.height, self.width),
+                                                     classes=self.classes,
+                                                     class_mode='categorical',
+                                                     shuffle=False)
 
         test_step = test_generator.samples // self.args.test_batch_size
 
@@ -149,9 +143,6 @@ class FlowerClassificationModel(object):
                 w.writerow(test_result_dict)
 
     def predict(self, x):
-
-        # set testing phase
-        K.set_learning_phase(bool(0))
 
         return self.model.predict(x)
 
