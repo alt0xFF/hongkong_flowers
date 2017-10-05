@@ -1,13 +1,12 @@
+import sys
 import os
 import os.path as osp
 import shutil
-import subprocess
+import base64
 import tensorflow as tf
+import numpy as np
 import keras
 
-from tensorflow.python.saved_model import builder as saved_model_builder
-from tensorflow.python.saved_model import tag_constants, signature_constants, signature_def_utils
-from tensorflow.python.saved_model import utils as saved_model_utils
 from tensorflow.contrib.session_bundle import exporter
 from keras import backend as K
 import numpy as np
@@ -15,7 +14,6 @@ from options import Options
 
 trained_model = 'model_best_weights.h5'
 model_dir = './checkpoints/2017-10-04_experiment_0/'
-bucket_dir = 'gs://staging.dlhk-flower.appspot.com'
 
 height = 244
 width = 244
@@ -34,25 +32,6 @@ def preprocess_input(tf_image):
 
     return data
 
-def build_signature(inputs, outputs):
-    """Build the signature.
-    Not using predic_signature_def in saved_model because it is replacing the
-    tensor name, b/35900497.
-    Args:
-    inputs: a dictionary of tensor name to tensor
-    outputs: a dictionary of tensor name to tensor
-    Returns:
-    The signature, a SignatureDef proto.
-    """
-    signature_inputs = {key: saved_model_utils.build_tensor_info(tensor) for key, tensor in inputs.items()}
-    signature_outputs = {key: saved_model_utils.build_tensor_info(tensor) for key, tensor in outputs.items()}
-
-    signature_def = signature_def_utils.build_signature_def(
-        signature_inputs, signature_outputs,
-        signature_constants.PREDICT_METHOD_NAME)
-
-    return signature_def
-
 def decode_and_resize(image_str_tensor):
   """Decodes jpeg string, resizes it and returns a uint8 tensor."""
   image = tf.image.decode_jpeg(image_str_tensor, channels=channels)
@@ -69,23 +48,18 @@ def decode_and_resize(image_str_tensor):
 if __name__ == '__main__':
     K.set_learning_phase(bool(0))
 
+    classes = [i for i in os.listdir('./dataset/train/') if os.path.isdir('./dataset/train/' + i)]
+
     tf_model_path = osp.join(model_dir, 'export')
-
-    try:
-        # remove old model file
-        print('removing {}'.format(tf_model_path))
-        shutil.rmtree(tf_model_path)
-    except:
-        pass
-
-    builder = saved_model_builder.SavedModelBuilder(tf_model_path)
 
     image_str_tensor = tf.placeholder(tf.string, shape=[None])
 
     image = tf.map_fn(
         decode_and_resize, image_str_tensor, back_prop=False, dtype=tf.uint8)
     # convert_image_dtype, also scales [0, uint8_max] -> [0 ,1).
+
     image = tf.cast(image, dtype=tf.float32)
+    # image = tf.image.convert_image_dtype(image, dtype=tf.float32)
 
     # setting up, options contains all our params
     options = Options(library=0,    # use keras
@@ -104,28 +78,15 @@ if __name__ == '__main__':
     my_model = model.model
 
     keys_placeholder = tf.placeholder(tf.string, shape=[None])
-    inputs = {
-        'key': keys_placeholder,
-        'image_bytes': image_str_tensor
-    }
 
-    # To extract the id, we need to add the identity function.
-    keys = tf.identity(keys_placeholder)
-    outputs = {
-        'key': keys,
-        'prediction': my_model.output,
-    }
-
-    signature_def = build_signature(inputs=inputs, outputs=outputs)
-    signature_def_map = {
-        signature_constants.DEFAULT_SERVING_SIGNATURE_DEF_KEY: signature_def
-    }
+    img = open(sys.argv[1], 'rb')  # this is a PIL image
+    image_base64 = img.read()
 
     with K.get_session() as sess:
-        builder.add_meta_graph_and_variables(sess=sess,
-                                             tags=[tag_constants.SERVING],
-                                             signature_def_map=signature_def_map)
-        builder.save()
-        print("Saved")
-
-    subprocess.call(['gsutil', 'cp','-r', tf_model_path, bucket_dir])
+        input_tensor_arr, outputs = sess.run([input_tensor, my_model.output], feed_dict={
+            image_str_tensor: [image_base64]
+        })
+        preds = outputs[0]
+        pred = np.argmax(preds)
+        print(preds[pred])
+        print(pred, classes[pred])

@@ -6,6 +6,7 @@ import os, gc, time
 import tensorflow as tf
 from keras import backend as K
 from keras.preprocessing.image import ImageDataGenerator
+from keras.applications.imagenet_utils import preprocess_input
 
 # custom modules
 from core.keras.parser import ModelsDict, OptimsDict, LossesDict, MetricsDict, TransformsDict
@@ -113,7 +114,7 @@ class FlowerClassificationModel(object):
                                  validation_steps=valid_step)
 
     def evaluate(self):
-        datagen = ImageDataGenerator
+        datagen = ImageDataGenerator(preprocessing_function=preprocess_input)
 
         # datasets and dataloader for test mode
         test_generator = datagen.flow_from_directory(self.test_dir,

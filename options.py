@@ -50,8 +50,8 @@ class Options(object):   # NOTE: shared across all modules
         self.l2               = 0.01
 
         # set early stopping and logging toggles
-        self.early_stopping   = False        # Toggle early_stopping
-        self.patience         = 10           # number of epochs to consider before early stopping
+        self.early_stopping   = True        # Toggle early_stopping
+        self.patience         = 20           # number of epochs to consider before early stopping
         self.log_interval     = 1            # print every log_interval batch
         self.visualize        = False        # tensorboard for keras, visdom for pytorch
 
