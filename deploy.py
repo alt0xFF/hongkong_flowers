@@ -1,7 +1,12 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 import os
 import os.path as osp
 import shutil
 import subprocess
+import argparse
 import tensorflow as tf
 import keras
 
@@ -12,10 +17,6 @@ from tensorflow.contrib.session_bundle import exporter
 from keras import backend as K
 import numpy as np
 from options import Options
-
-trained_model = 'model_best_weights.h5'
-model_dir = './checkpoints/2017-10-04_experiment_0/'
-bucket_dir = 'gs://staging.dlhk-flower.appspot.com'
 
 height = 244
 width = 244
@@ -69,7 +70,21 @@ def decode_and_resize(image_str_tensor):
 if __name__ == '__main__':
     K.set_learning_phase(bool(0))
 
-    tf_model_path = osp.join(model_dir, 'export')
+    parser = argparse.ArgumentParser(description='Deploy model to gcloud')
+    parser.add_argument('-t', '--trained_model', default='model_best_weights.h5',
+                        type=str,
+                        help='trained model location')
+    parser.add_argument('-m', '--model_dir', default='./checkpoints/2017-10-04_experiment_0/',
+                        type=str,
+                        help='model directory')
+    parser.add_argument('-b', '--bucket_dir', default='gs://dlhk-flower.appspot.com',
+                        type=str,
+                        help='gcloud storage bucket')
+    args = parser.parse_args()
+
+    K.set_learning_phase(bool(0))
+
+    tf_model_path = osp.join(args.model_dir, 'export')
 
     try:
         # remove old model file
@@ -94,7 +109,7 @@ if __name__ == '__main__':
 
     # load the weight file
     options.load = True
-    options.load_file = osp.join(model_dir, trained_model)
+    options.load_file = osp.join(args.model_dir, args.trained_model)
 
     input_tensor = preprocess_input(image)
 
@@ -128,4 +143,4 @@ if __name__ == '__main__':
         builder.save()
         print("Saved")
 
-    subprocess.call(['gsutil', 'cp','-r', tf_model_path, bucket_dir])
+    subprocess.call(['gsutil', 'cp','-r', tf_model_path, args.bucket_dir])

@@ -9,13 +9,11 @@ def resnet50_model(args, num_classes, input_tensor=None):
     model = ResNet50(weights='imagenet', include_top=False, input_shape=args.img_size, input_tensor=input_tensor)
     print('Model loaded.')
 
-    # set the first 80 layers (up to the last conv block)
-    # to non-trainable (weights will not be updated)
+    # freezed all layers of resnet50
+    # since the weights are pretrained finetuned with oxford102
+    # we only train the last fc layer
     for layer in model.layers:
         layer.trainable = True
-
-    # for layer in model.layers[:80]:
-    #     layer.trainable = False
 
     # build a classifier model to put on top of the convolutional model
     y = model.output
