@@ -14,8 +14,8 @@ max-line-length=128
 # Maximum number of lines in a module
 max-module-lines=1000
 # String used as indentation unit. This is usually "    " (4 spaces) or "\t" (1
-# tab).  In repo it is 2 spaces.
-indent-string='  '
+# tab).
+indent-string='    '
 string-quote=single
 triple-quote=double
 docstring-quote=double
