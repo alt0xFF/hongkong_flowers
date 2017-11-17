@@ -1,3 +1,7 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 import os
 import os.path as osp
 import shutil
@@ -71,7 +75,7 @@ if __name__ == '__main__':
     parser.add_argument('-m', '--model_dir', default='./checkpoints/2017-10-04_experiment_0/',
                         type=str,
                         help='model directory')
-    parser.add_argument('-b', '--bucket_dir', default='gs://staging.dlhk-flower.appspot.com',
+    parser.add_argument('-b', '--bucket_dir', default='gs://dlhk-flower.appspot.com',
                         type=str,
                         help='gcloud storage bucket')
     args = parser.parse_args()

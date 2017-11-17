@@ -10,6 +10,7 @@ from keras.applications.imagenet_utils import preprocess_input
 ModelsDict = {"model_template": model_template,  # contains only CNN and dense layer
               "resnet50_model": resnet50_model,  #
               }
+
 # losses
 from keras.losses import categorical_crossentropy
 
@@ -37,8 +38,8 @@ TransformsDict = {"to_tensor_only": ImageDataGenerator(preprocessing_function=pr
                                                            rotation_range=40,
                                                            width_shift_range=0.2,
                                                            height_shift_range=0.2,
-                                                           shear_range=0.2,
+                                                           shear_range=0.1,
                                                            zoom_range=0.2,
                                                            horizontal_flip=True,
-                                                           fill_mode='nearest'),
+                                                           vertical_flip=False),
                   }
