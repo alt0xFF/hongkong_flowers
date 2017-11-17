@@ -9,7 +9,12 @@ import tarfile
 from shutil import copyfile, rmtree
 import numpy as np
 from scipy.io import loadmat
-import config
+import options
+config = options.Options()
+import logging
+FORMAT = "[%(levelname)s] %(filename)s::%(funcName)s():%(lineno)s | %(message)s"
+#logger = logging.getLogger()
+logging.basicConfig(stream=sys.stderr, level=logging.DEBUG, format=FORMAT) 
 
 if sys.version_info[0] >= 3:
     from urllib.request import urlretrieve # #pylint: disable=W,E
@@ -68,9 +73,9 @@ labels = np.array([i for i in zip(files, image_labels)])
 cwd = os.path.dirname(os.path.realpath(__file__))
 
 if os.path.exists(config.data_dir):
-    rmtree(config.data_dir, ignore_errors=True)
-os.mkdir(config.data_dir)
-
+    logging.error("directory ["+ config.data_dir +"] already exists.  remove it yourself first")
+else:
+    os.mkdir(config.data_dir)
 
 def move_files(dir_name, labels):
     cur_dir_path = os.path.join(config.data_dir, dir_name)
