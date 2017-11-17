@@ -68,8 +68,6 @@ def decode_and_resize(image_str_tensor):
   return image
 
 if __name__ == '__main__':
-    K.set_learning_phase(bool(0))
-
     parser = argparse.ArgumentParser(description='Deploy model to gcloud')
     parser.add_argument('-t', '--trained_model', default='model_best_weights.h5',
                         type=str,
