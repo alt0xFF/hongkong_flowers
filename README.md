@@ -77,7 +77,7 @@ Deploy to GCloud
 ```
     $export MODEL_BINARIES=gs://dlhk-flower.appspot.com/export
     $export MODEL_NAME=baseline
-    $gcloud ml-engine models create $MODEL_NAME --regions=asia-east1` if you are first time to create model,
+    $gcloud ml-engine models create $MODEL_NAME --regions=asia-east1 # if you are first time to create model,
     $gcloud ml-engine versions create v1 --model $MODEL_NAME --origin $MODEL_BINARIES --runtime-version 1.3 # otherwise just create a new version
 ```
 
