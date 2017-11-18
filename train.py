@@ -13,7 +13,7 @@ def train():
                       transform=1)  # use transform for resnet50
 
     # initialize model
-    model = options.FlowerClassificationModel(options)
+    model = options.initializeModel()
 
     # fit model
     model.fit()

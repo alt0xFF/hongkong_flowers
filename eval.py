@@ -16,7 +16,7 @@ def eval():
     options.load_file = './checkpoints/2017-10-02_experiment_0/model_best_weights.h5'
 
     # initialize model
-    model = options.FlowerClassificationModel(options)
+    model = options.initializeModel()
 
     # fit model
     model.evaluate()
