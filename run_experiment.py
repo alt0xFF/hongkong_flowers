@@ -31,7 +31,7 @@ def train():
     for i in range(0, 9):
 
         # initialize model
-        model = options.FlowerClassificationModel(options)
+        model = options.initializeModel()
 
         # fit model
         model.fit()

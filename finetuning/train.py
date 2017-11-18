@@ -54,9 +54,10 @@ weights_path = 'pretrained_models/fine-tuned-resnet50-weights.h5'
 # dimensions of our images.
 img_width, img_height = 224, 224
 
-train_data_dir = 'dataset/oxford102/train'
-validation_data_dir = 'dataset/oxford102/valid'
-test_data_dir = 'dataset/oxford102/test'
+train_data_dir = 'dataset/train'
+validation_data_dir = 'dataset/valid'
+test_data_dir = 'dataset/test'
+
 classes = sorted([o for o in os.listdir(train_data_dir) if os.path.isdir(os.path.join(train_data_dir, o))])
 epochs = 1000
 batch_size = 50
