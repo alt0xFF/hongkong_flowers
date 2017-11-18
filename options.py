@@ -84,18 +84,8 @@ class Options(object):   # NOTE: shared across all modules
         self.configs   = CONFIGS[self.configs]
         self.transform = TRANSFORMS[self.transform]
 
-        # choose model from library
-        if self.library == 'pytorch':
-            from core.pytorch.model import FlowerClassificationModel
-        elif self.library == 'keras':
-            from core.keras.model import FlowerClassificationModel
-        else:
-            raise ValueError('Library not supported.')
-
-        self.FlowerClassificationModel = FlowerClassificationModel
-
         #----------------------------------------------------------------------------------------#
-# advance settings
+        # advance settings
 
         # pytorch settings
         if self.library == "pytorch":
@@ -105,3 +95,15 @@ class Options(object):   # NOTE: shared across all modules
         # keras settings
         if self.library == "keras":
             self.img_size  = (self.height, self.width, self.channel)
+
+    def initializeModel(self):
+
+        # choose model from library
+        if self.library == 'pytorch':
+            from core.pytorch.model import FlowerClassificationModel
+        elif self.library == 'keras':
+            from core.keras.model import FlowerClassificationModel
+        else:
+            raise ValueError('Library not supported.')
+
+        return FlowerClassificationModel(self)
