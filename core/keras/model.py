@@ -84,6 +84,7 @@ class FlowerClassificationModel(object):
         self.model.compile(loss=self.criterion, optimizer=self.optimizer, metrics=self.metric)
 
         print ('Successfully loaded model. (%.4fs)' % (time.time() - start_time))
+
     def fit(self):
 
         # datasets and dataloader for training
